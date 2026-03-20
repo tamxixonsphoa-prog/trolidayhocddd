@@ -198,7 +198,6 @@ interface QuestionItem {
 const AI_MODELS = [
   { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash (Mặc định)', icon: '⚡' },
   { id: 'gemini-2.0-flash-lite', name: 'Gemini 2.0 Flash Lite', icon: '🧠' },
-  { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash (Ổn định)', icon: '🚀' }
 ];
 
 export default function App() {
@@ -2006,9 +2005,9 @@ Nếu là Trả lời ngắn/Điền khuyết: bỏ options, correctAnswer là �
       </footer>
       
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 w-full z-[100] flex justify-around items-center px-4 py-3 bg-white/70 backdrop-blur-lg shadow-2xl rounded-t-xl pb-safe">
+      <nav className="fixed bottom-0 left-0 w-full z-[100] flex justify-around items-center px-4 py-1.5 bg-white/70 backdrop-blur-lg shadow-2xl rounded-t-xl pb-safe">
         {/* Home (Active) */}
-        <button className="flex flex-col items-center justify-center bg-gradient-to-b from-primary to-primary-container text-white rounded-full p-4 scale-110 -translate-y-2 shadow-[0_10px_30px_rgba(0,85,196,0.3)] transition-all duration-300 ease-out border-none" onClick={reset}>
+        <button className="flex flex-col items-center justify-center bg-gradient-to-b from-primary to-primary-container text-white rounded-full p-2.5 scale-105 -translate-y-1 shadow-[0_8px_20px_rgba(0,85,196,0.3)] transition-all duration-300 ease-out border-none" onClick={reset}>
           <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>home</span>
           <span className="font-label font-bold text-[10px] mt-1">Home</span>
         </button>
