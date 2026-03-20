@@ -198,7 +198,7 @@ interface QuestionItem {
 const AI_MODELS = [
   { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash (Mặc định)', icon: '⚡' },
   { id: 'gemini-2.0-flash-lite', name: 'Gemini 2.0 Flash Lite', icon: '🧠' },
-  { id: 'gemini-1.5-flash-latest', name: 'Gemini 1.5 Flash (Ổn định)', icon: '🚀' }
+  { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash (Ổn định)', icon: '🚀' }
 ];
 
 export default function App() {
