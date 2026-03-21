@@ -567,7 +567,7 @@ export default function App() {
       const jsonMatch = fullText.match(/\`\`\`json\n([\s\S]*?)\n\`\`\`/);
       if (jsonMatch && jsonMatch[1]) {
         try {
-          const parsed = JSON.parse(jsonMatch[1]);
+          const parsed = safeParseJSON(jsonMatch[1]);
           if (Array.isArray(parsed)) {
             setParsedQuestions(applyLatexToQuestions(parsed));
           }
@@ -654,6 +654,34 @@ export default function App() {
    * Export parsedQuestions to a Word-compatible .doc file (HTML-in-DOC technique).
    * Works without any extra npm packages — Word opens HTML blobs with .doc extension.
    */
+
+  /**
+   * Safely parse JSON from AI output.
+   * Handles bad escape sequences that AI models sometimes produce.
+   */
+  const safeParseJSON = (raw: string): any => {
+    // First attempt: direct parse
+    try { return JSON.parse(raw); } catch { /* fall through */ }
+
+    // Second attempt: fix common bad escapes inside string values
+    // Replace unescaped control chars and lone backslashes in string values
+    const fixed = raw
+      .replace(/\\'/g, "'")                     // \' → '  (invalid JSON escape)
+      .replace(/([^\\])\\([^"\\/bfnrtu])/g, '$1\\\\$2') // lone \ → \\
+      .replace(/\n/g, '\\n')                    // literal newline inside string
+      .replace(/\r/g, '\\r')                    // literal carriage return
+      .replace(/\t/g, '\\t');                   // literal tab
+
+    try { return JSON.parse(fixed); } catch { /* fall through */ }
+
+    // Third attempt: strip everything outside the outermost [...] array
+    const arrMatch = raw.match(/\[[\s\S]*\]/);
+    if (arrMatch) {
+      try { return JSON.parse(arrMatch[0]); } catch { /* fall through */ }
+    }
+
+    throw new Error('Không thể phân tích JSON từ phản hồi AI.');
+  };
 
 
   // Load mammoth.js from CDN (for DOCX extraction)
@@ -743,7 +771,7 @@ Nếu là Trả lời ngắn/Điền khuyết: bỏ options, correctAnswer là �
       const text = await callGeminiWithFallback([{ text: prompt }]);
       const jsonMatch = (text || '').match(/```json\n([\s\S]*?)\n```/);
       if (jsonMatch?.[1]) {
-        const parsed = JSON.parse(jsonMatch[1]);
+        const parsed = safeParseJSON(jsonMatch[1]);
         if (Array.isArray(parsed)) { setParsedQuestions(applyLatexToQuestions(parsed)); setStage('m1_edit'); return; }
       }
       setError('Không thể phân tích. Hãy thử lại hoặc chỉnh sửa thủ công.');
